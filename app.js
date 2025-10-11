@@ -5,53 +5,52 @@ const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+require("dotenv").config(); // <---- ADD THIS LINE
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
-
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// ✅ Use environment variable for MongoDB URL
+const MONGO_URL =
+  process.env.MONGO_URL || "mongodb://127.0.0.1:27017/wanderlust";
 
 async function main() {
   await mongoose.connect(MONGO_URL);
+  console.log("✅ Connected to MongoDB");
 }
 
+main().catch((err) => console.log("❌ DB connection error:", err));
+
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+// ✅ Home route (render homepage instead of plain text)
 app.get("/", (req, res) => {
-  res.send("Hi, I am root");
+  res.render("listings/index.ejs"); // You can change to any main EJS file
 });
 
-//Index Route
+// Index Route
 app.get("/listings", async (req, res) => {
   const allListings = await Listing.find({});
   res.render("listings/index.ejs", { allListings });
 });
 
-//New Route
+// New Route
 app.get("/listings/new", (req, res) => {
   res.render("listings/new.ejs");
 });
 
-//Show Route
+// Show Route
 app.get("/listings/:id", async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/show.ejs", { listing });
 });
 
+// Create Route
 app.post("/listings", async (req, res) => {
   const { listing } = req.body;
-
   const newListing = new Listing({
     ...listing,
     image: {
@@ -62,26 +61,25 @@ app.post("/listings", async (req, res) => {
       filename: "listingimage",
     },
   });
-
   await newListing.save();
   res.redirect("/listings");
 });
 
-//Edit Route
+// Edit Route
 app.get("/listings/:id/edit", async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/edit.ejs", { listing });
 });
 
-//Update Route
+// Update Route
 app.put("/listings/:id", async (req, res) => {
   let { id } = req.params;
   await Listing.findByIdAndUpdate(id, { ...req.body.listing });
   res.redirect(`/listings/${id}`);
 });
 
-//Delete Route
+// Delete Route
 app.delete("/listings/:id", async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
@@ -89,6 +87,8 @@ app.delete("/listings/:id", async (req, res) => {
   res.redirect("/listings");
 });
 
-app.listen(8080, () => {
-  console.log("server is listening to port 8080");
+// ✅ Port for Render (important!)
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
