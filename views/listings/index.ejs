@@ -1,0 +1,54 @@
+<% layout("/layouts/boilerplate") %>
+<h3>All Listings</h3>
+
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+  <% for(let listing of allListings) { %>
+  <a href="/listings/<%= listing._id %>" class="Listing-link">
+    <div class="card col listing-card">
+      <img
+        src="<%= listing.image.url %>"
+        class="card-img-top"
+        alt="listing_image"
+        style="height: 20rem"
+      />
+      <div class="card-body">
+        <p class="card-text">
+          <b><%= listing.title %> </b><br />
+          &#8377; <span class="price"><%= listing.price %></span> / night <br />
+          <%= listing.location %>, <%= listing.country %>
+        </p>
+      </div>
+    </div>
+  </a>
+  <% } %>
+</div>
+
+<!--  Script for Price Filter -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("priceSearchForm");
+    const input = document.getElementById("priceInput");
+    const cards = document.querySelectorAll(".listing-card");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const searchPrice = input.value.trim();
+
+      cards.forEach((card) => {
+        const priceText = card
+          .querySelector(".price")
+          .textContent.replace(/[^\d]/g, "");
+        const price = parseInt(priceText, 10);
+
+        if (!searchPrice || price === parseInt(searchPrice)) {
+          card.style.display = "block";
+          card.style.opacity = 0;
+          setTimeout(() => (card.style.opacity = 1), 200);
+        } else {
+          card.style.opacity = 0;
+          setTimeout(() => (card.style.display = "none"), 200);
+        }
+      });
+    });
+  });
+</script>

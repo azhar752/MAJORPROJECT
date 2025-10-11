@@ -1,0 +1,69 @@
+<footer>
+  <div class="f-info">
+    <div class="f-info-socials">
+      <i class="fa-brands fa-square-facebook"></i>
+      <i class="fa-brands fa-square-instagram"></i>
+      <i class="fa-brands fa-linkedin"></i>
+    </div>
+
+    <div class="f-info-brand">&copy; WanderLust Private Limited</div>
+
+    <div class="f-info-links">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </div>
+
+    <div class="crafted">
+      crafted by <span>Azhar</span>
+      <button id="contactBtn" class="contact-btn">Contact Me</button>
+    </div>
+  </div>
+
+  <!-- Hidden Contact Box -->
+  <div class="contact-box" id="contactBox">
+    <p><i class="fa-solid fa-envelope"></i> azharfarooq750@gmail.com</p>
+    <p><i class="fa-solid fa-phone"></i> +91 9622129264</p>
+    <p><i class="fa-brands fa-whatsapp"></i> +91 889943224</p>
+  </div>
+
+  <!-- ✅ Contact Button Script -->
+  <script>
+    const btn = document.getElementById("contactBtn");
+    const box = document.getElementById("contactBox");
+    btn.addEventListener("click", () => {
+      box.classList.toggle("show");
+    });
+  </script>
+
+  <!-- ✅ Price Search Filter Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("priceSearchForm");
+      const input = document.getElementById("priceInput");
+      const cards = document.querySelectorAll(".listing-card");
+
+      if (!form) return; // agar form navbar me nhi mila to skip
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const searchPrice = input.value.trim();
+
+        cards.forEach((card) => {
+          const priceText = card
+            .querySelector(".price")
+            .textContent.replace(/[^\d]/g, "");
+          const price = parseInt(priceText, 10);
+
+          if (!searchPrice || price === parseInt(searchPrice)) {
+            card.style.display = "block";
+            card.style.opacity = 0;
+            setTimeout(() => (card.style.opacity = 1), 150);
+          } else {
+            card.style.opacity = 0;
+            setTimeout(() => (card.style.display = "none"), 150);
+          }
+        });
+      });
+    });
+  </script>
+</footer>
