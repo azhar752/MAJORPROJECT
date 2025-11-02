@@ -57,7 +57,7 @@ body {
   align-items: space-evenly;
 }
 /* Card */
-.card {
+.listing-card {
   border: none !important;
   margin-bottom: 2rem;
 }
@@ -185,4 +185,18 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.listing-image {
+  width: 100%;
+  max-width: 250px;
+  max-height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+/* MAP */
+#map {
+  height: 400px;
+  width: 80vhpx;
 }

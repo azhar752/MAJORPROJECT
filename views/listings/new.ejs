@@ -1,8 +1,17 @@
 <% layout("layouts/boilerplate") %>
+
 <div class="row mt-3">
   <div class="col-8 offset-2">
     <h3 class="mb-4">Create a New Listing</h3>
-    <form method="POST" action="/listings">
+
+    <form
+      method="POST"
+      action="/listings"
+      novalidate
+      class="needs-validation"
+      enctype="multipart/form-data"
+    >
+      <!-- Title -->
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input
@@ -11,29 +20,37 @@
           placeholder="Add a catchy title"
           type="text"
           class="form-control"
+          required
         />
+        <div class="valid-feedback">Title looks good!</div>
       </div>
 
+      <!-- Description -->
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea
           name="listing[description]"
           id="description"
           class="form-control"
+          required
         ></textarea>
+        <div class="invalid-feedback">Please enter a description.</div>
       </div>
 
+      <!-- Image -->
+
       <div class="mb-3">
-        <label for="image" class="form-label">Image Link</label>
+        <label for="image" class="form-label">Upload Listing image</label>
         <input
           name="listing[image]"
           id="image"
-          placeholder="Enter image URL/Link"
-          type="text"
+          type="file"
           class="form-control"
+          required
         />
       </div>
 
+      <!-- Price & Country -->
       <div class="row">
         <div class="mb-3 col-md-4">
           <label for="price" class="form-label">Price</label>
@@ -41,9 +58,10 @@
             name="listing[price]"
             id="price"
             placeholder="1200"
-            type="number"
             class="form-control"
+            required
           />
+          <div class="invalid-feedback">Please enter a price.</div>
         </div>
 
         <div class="mb-3 col-md-8">
@@ -54,10 +72,13 @@
             placeholder="India"
             type="text"
             class="form-control"
+            required
           />
+          <div class="invalid-feedback">Please enter a country.</div>
         </div>
       </div>
 
+      <!-- Location -->
       <div class="mb-3">
         <label for="location" class="form-label">Location</label>
         <input
@@ -66,9 +87,34 @@
           placeholder="Doda, Marmat"
           type="text"
           class="form-control"
+          required
         />
+        <div class="invalid-feedback">Please enter a location.</div>
       </div>
-      <button class="btn btn-dark add-btn mt-3">Add</button>
+
+      <button class="btn btn-dark add-btn mt-3" type="submit">Add</button>
     </form>
   </div>
 </div>
+
+<!-- ✅ Bootstrap Client Side Validation Script -->
+<script>
+  (() => {
+    "use strict";
+    const forms = document.querySelectorAll(".needs-validation");
+
+    Array.from(forms).forEach((form) => {
+      form.addEventListener(
+        "submit",
+        (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>
